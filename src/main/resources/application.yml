@@ -1,0 +1,7 @@
+micronaut:
+  application:
+    name: io.santisi.sfdc.rest
+netty:
+  default:
+    allocator:
+      max-order: 3

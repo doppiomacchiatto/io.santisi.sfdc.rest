@@ -1,0 +1,65 @@
+plugins {
+    id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("io.micronaut.application") version "3.7.10"
+    id("io.micronaut.aot") version "3.7.10"
+    id 'java'
+}
+
+version = "0.1"
+group = "sfdc.rest.io"
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    maven {
+        url "https://repo.maven.apache.org/maven2/"
+    }
+}
+
+dependencies {
+    annotationProcessor("org.projectlombok:lombok")
+    annotationProcessor("io.micronaut:micronaut-http-validation")
+    annotationProcessor("info.picocli:picocli-codegen:3.7.0")
+    implementation("io.micronaut.picocli:micronaut-picocli:2.0.0")
+    implementation("io.micronaut.picocli:micronaut-picocli:2.0.0")
+    implementation("io.micronaut:micronaut-http-client")
+    implementation("io.micronaut:micronaut-jackson-databind")
+    implementation("jakarta.annotation:jakarta.annotation-api")
+    implementation("javax.inject:javax.inject:1")
+    compileOnly("org.projectlombok:lombok")
+    runtimeOnly("ch.qos.logback:logback-classic:1.4.11")
+    runtimeOnly("org.yaml:snakeyaml")
+}
+
+
+application {
+    mainClass.set("sfdc.rest.io.RestApiCommand")
+}
+java {
+    sourceCompatibility = JavaVersion.toVersion("11")
+    targetCompatibility = JavaVersion.toVersion("11")
+}
+
+graalvmNative.toolchainDetection = false
+micronaut {
+    runtime("netty")
+    testRuntime("junit5")
+    processing {
+        incremental(true)
+        annotations("sfdc.rest.io.*")
+    }
+    aot {
+        // Please review carefully the optimizations enabled below
+        // Check https://micronaut-projects.github.io/micronaut-aot/latest/guide/ for more details
+        optimizeServiceLoading = true
+        convertYamlToJava = true
+        precomputeOperations = true
+        cacheEnvironment = true
+        optimizeClassLoading = true
+        deduceEnvironment = true
+        optimizeNetty = true
+    }
+}
+
+
+
